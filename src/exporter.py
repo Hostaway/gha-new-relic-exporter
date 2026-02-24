@@ -146,22 +146,23 @@ req_headers = {
     "X-GitHub-Api-Version": "2022-11-28",
 }
 
-url1 = (
-    GITHUB_API_URL
-    + "/repos/"
-    + GHA_SERVICE_NAME.split("/")[0]
-    + "/"
-    + GHA_SERVICE_NAME.split("/")[1]
-    + "/actions/runs/"
-    + str(GHA_RUN_ID)
-    + "/logs"
-)
-r1 = requests.get(url1, headers=req_headers)
-with open("log.zip", "wb") as output_file:
-    output_file.write(r1.content)
+if GHA_EXPORT_LOGS:
+    url1 = (
+        GITHUB_API_URL
+        + "/repos/"
+        + GHA_SERVICE_NAME.split("/")[0]
+        + "/"
+        + GHA_SERVICE_NAME.split("/")[1]
+        + "/actions/runs/"
+        + str(GHA_RUN_ID)
+        + "/logs"
+    )
+    r1 = requests.get(url1, headers=req_headers)
+    with open("log.zip", "wb") as output_file:
+        output_file.write(r1.content)
 
-with zipfile.ZipFile("log.zip", "r") as zip_ref:
-    zip_ref.extractall("./logs")
+    with zipfile.ZipFile("log.zip", "r") as zip_ref:
+        zip_ref.extractall("./logs")
 
 # Jobs trace span
 # Set Jobs tracer and logger

@@ -38,10 +38,11 @@ else:
     print("INFO: Configured to send logs to backend")
     GHA_EXPORT_LOGS = True
 
+GHA_GITHUB_REPOSITORY = os.getenv("GITHUB_REPOSITORY")
 if "GHA_REPOSITORY" in os.environ:
     GHA_SERVICE_NAME = os.getenv("GHA_REPOSITORY")
 else:
-    GHA_SERVICE_NAME = os.getenv("GITHUB_REPOSITORY")
+    GHA_SERVICE_NAME = GHA_GITHUB_REPOSITORY
 
 if "GHA_REPOSITORY_OWNER" in os.environ:
     GITHUB_REPOSITORY_OWNER = os.getenv("GHA_REPOSITORY_OWNER")
@@ -71,7 +72,7 @@ headers = "api-key={}".format(NEW_RELIC_LICENSE_KEY)
 # Github API client
 api = GhApi(
     owner=GITHUB_REPOSITORY_OWNER,
-    repo=GHA_SERVICE_NAME.split("/")[1],
+    repo=GHA_GITHUB_REPOSITORY.split("/")[1],
     token=str(GHA_TOKEN),
 )
 
@@ -150,9 +151,9 @@ if GHA_EXPORT_LOGS:
     url1 = (
         GITHUB_API_URL
         + "/repos/"
-        + GHA_SERVICE_NAME.split("/")[0]
+        + GHA_GITHUB_REPOSITORY.split("/")[0]
         + "/"
-        + GHA_SERVICE_NAME.split("/")[1]
+        + GHA_GITHUB_REPOSITORY.split("/")[1]
         + "/actions/runs/"
         + str(GHA_RUN_ID)
         + "/logs"
